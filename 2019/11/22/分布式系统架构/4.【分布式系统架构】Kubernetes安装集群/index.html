@@ -20,7 +20,7 @@
 <script id="hexo-configurations">
   var NexT = window.NexT || {};
   var CONFIG = {
-    hostname: new URL('http://yoursite.com').hostname,
+    hostname: new URL('https://kdgcsoft.ltd').hostname,
     root: '/',
     scheme: 'Mist',
     version: '7.5.0',
@@ -50,14 +50,14 @@
   <meta name="description" content="概述kubeadm是kubernetes的集群安装工具，能够快速安装kubernetes集群，安装kubernetes主要是安装它的各个镜像，而kubeadm已经为我们集成好了运行kubernetes所需的基本镜像。但由于国内的网络原因，在搭建环境时，无法拉取到这些镜像。此时我们只需要修改为阿里云提供的镜像服务即可解决该问题。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="4.【分布式系统架构】Kubernetes安装集群">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;22&#x2F;%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84&#x2F;4.%E3%80%90%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E3%80%91Kubernetes%E5%AE%89%E8%A3%85%E9%9B%86%E7%BE%A4&#x2F;index.html">
+<meta property="og:url" content="https:&#x2F;&#x2F;kdgcsoft.ltd&#x2F;2019&#x2F;11&#x2F;22&#x2F;%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84&#x2F;4.%E3%80%90%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E3%80%91Kubernetes%E5%AE%89%E8%A3%85%E9%9B%86%E7%BE%A4&#x2F;index.html">
 <meta property="og:site_name" content="DeKu&#39;s Blog">
 <meta property="og:description" content="概述kubeadm是kubernetes的集群安装工具，能够快速安装kubernetes集群，安装kubernetes主要是安装它的各个镜像，而kubeadm已经为我们集成好了运行kubernetes所需的基本镜像。但由于国内的网络原因，在搭建环境时，无法拉取到这些镜像。此时我们只需要修改为阿里云提供的镜像服务即可解决该问题。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:updated_time" content="2019-11-26T05:51:05.515Z">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/2019/11/22/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/4.%E3%80%90%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E3%80%91Kubernetes%E5%AE%89%E8%A3%85%E9%9B%86%E7%BE%A4/">
+<link rel="canonical" href="https://kdgcsoft.ltd/2019/11/22/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/4.%E3%80%90%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E3%80%91Kubernetes%E5%AE%89%E8%A3%85%E9%9B%86%E7%BE%A4/">
 
 
 <script id="page-configurations">
@@ -213,7 +213,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/22/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/4.%E3%80%90%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E3%80%91Kubernetes%E5%AE%89%E8%A3%85%E9%9B%86%E7%BE%A4/">
+    <link itemprop="mainEntityOfPage" href="https://kdgcsoft.ltd/2019/11/22/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/4.%E3%80%90%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E3%80%91Kubernetes%E5%AE%89%E8%A3%85%E9%9B%86%E7%BE%A4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -342,7 +342,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yoursite.com/2019/11/22/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/4.%E3%80%90%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E3%80%91Kubernetes%E5%AE%89%E8%A3%85%E9%9B%86%E7%BE%A4/" title="4.【分布式系统架构】Kubernetes安装集群">http://yoursite.com/2019/11/22/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/4.%E3%80%90%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E3%80%91Kubernetes%E5%AE%89%E8%A3%85%E9%9B%86%E7%BE%A4/</a>
+    <a href="https://kdgcsoft.ltd/2019/11/22/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/4.%E3%80%90%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E3%80%91Kubernetes%E5%AE%89%E8%A3%85%E9%9B%86%E7%BE%A4/" title="4.【分布式系统架构】Kubernetes安装集群">https://kdgcsoft.ltd/2019/11/22/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/4.%E3%80%90%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E3%80%91Kubernetes%E5%AE%89%E8%A3%85%E9%9B%86%E7%BE%A4/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
