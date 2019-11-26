@@ -1,0 +1,170 @@
+---
+title: Spring基础
+date: 2019-05-28 11:15:23
+categories: 面试
+---
+
+#### `Servlet`
+
+###### `Servlet`生命周期
+
+`Servlet`的生命周期包含了四个阶段：加载和实例化、初始化、请求处理、服务终止。
+
+- 加载和实例化：当`Servlet`容器启动或客户端发送一个请求时，`Servlet`容器会查找内存中是否存在该`Servlet`实例，若存在，则直接读取该实例响应请求，若不存在，就创建一个`Servlet`实例；
+- 初始化：实例化后，`Servlet`容器将调用`Servlet`的`init()`方法进行初始化，初始化后，`Servlet`处于能响应请求的就绪状态；
+- 请求处理：当接受客户端请求时，调用`service()`方法处理客户端的请求，`service()`方法会根据不同的请求方式，调用不同的`doXX()`方法；
+- 服务终止：当`Servlet`容器关闭时，`Servlet`实例也随之销毁。其间，`Servlet`容器会调用`destory()`方法去判断该`Servlet`是否应当被释放（回收）。
+
+`Servlet`运行原理如下：
+
+![](E:\文档\知识点\images\Servlet运行原理.jpg)
+
+###### 转发与重定向的区别
+
+转发是服务器行为，重定向是客户端行为。
+
+重定向时浏览器会发起两次请求，转发是浏览器只进行一次请求；
+
+重定向request里的数据时不可传递，转发request里的数据可传递；
+
+重定向地址栏是新地址，转发地址栏不变。
+
+###### `JSP`与`Servlet`的区别
+
+`JSP`是`Servlet`技术的扩展，`Servlet`的应用逻辑是在Java文件中，并且完全从表示层中的HTML里分离出来，而`JSP`是Java和HTML组合成一个扩展名为`.jsp`的文件，`JSP`侧重于视图，`Servlet`主要用于控制逻辑。
+
+###### `JSP`的九大内置对象、四大作用域、三大指令
+
+九大内置对象：`request、reponse、session、application、out、pageContext、config、page、exception`
+
+四大作用域：`page、request、session、context`
+
+三大指令：`page、include、taglib`
+
+###### Cookie与Session的区别
+
+- Cookie数据存放在浏览器上，Session数据存放在服务器上；
+- Cookie不是很安全，别人可以分析存放在本地的Cookie进行Cookie欺骗，考虑安全性应该使用Session；
+- Session会在一定时间内保存在服务器上，当访问增多，会影响服务的性能，考到到减轻服务器性能方面，应当使用Cookie；
+- 单个Cookie保存的数据不能超过`4KB`，很多浏览器都限制一个站点最多保存20个Cookie。
+
+#### `Spring`
+
+###### 依赖注入（DI）和控制反转（IOC）
+
+依赖注入（Dependecy Injection）和控制反转（Inversion of Control）是同一个概念。具体来讲：当某个角色需要另一个角色协助的时候，在传统的程序设计过程中，通常由调用者来创建被调用的实例，但在Spring容器中创建被调用者的工作不再由调用者来完成，因此称为控制反转；创建被调用者的的工作由Spring容器来完成，因此也称为依赖注入。
+
+###### Spring Bean的生命周期
+
+1. 实例化Bean对象（通过构造方法或工厂方法）；
+2. 设置对象属性（Setter注入）；
+3. 如果Bean实现了`BeanNameAware`接口，工厂调用Bean的`setBeanName()`方法传递Bean的ID；
+4. 如果Bean实现了`BeanFactoryAware`接口，工厂调用Bean的`setBeanFactory()`方法传入工厂自身；
+5. 将Bean实例传递给Bean的前置处理器`processBeforeInitialization()`方法；
+6. 调用`InitializingBean`的`afterPropertiesSet()`方法；
+7. 将Bean实例传递给Bean的前置处理器`processAfterInitialization()`方法；
+8. 在容器关闭时，执行`DisposableBean`的`destory()`方法。
+
+###### `BeanFactory`与`ApplicationContext`的区别
+
+- `BeanFactory`是Spring里面最底层的接口，提供了最简单的容器功能，只提供了实例化对象和拿对象的功能；
+- `ApplicationContext`接口是由`BeanFactory`接口派生出来的，所有提供了`BeanFactory`的所有功能，并且它还额外提供了其他功能：国际化、资源访问、事件传播、载入多个上下文；
+- `BeanFactroy`采用的是延迟加载形式来注入Bean的，即只有在使用到某个Bean时(调用`getBean()`)，才对该Bean进行加载实例化，这样，我们就不能发现一些存在的Spring的配置问题。而`ApplicationContext`则相反，它是在容器启动时，一次性创建了所有的Bean。这样，在容器启动时，我们就可以发现Spring中存在的配置错误。 相对于基本的`BeanFactory`，`ApplicationContext `唯一的不足是占用内存空间。当应用程序配置Bean较多时，程序启动较慢；
+- `BeanFactory`和`ApplicationContext`都支持`BeanPostProcessor`、`BeanFactoryPostProcessor`的使用，但两者之间的区别是：`BeanFactory`需要手动注册，而`ApplicationContext`则是自动注册。
+
+######  Spring事务实现方式、事务的传播机制、默认的事务类别
+
+事务的定义：指多个操作单元组成的合集，多个单元操作是整体不可分割的，要么都操作不成功，要么都成功。其必须遵循四个原则（ACID）：
+
+原子性（Atomicity）：事务是不可分割的最小工作单元，事务内的操作要么全不做，要么全做；
+
+一致性（Consistency）：在事务执行前，数据库的数据处于正确的状态，而事务执行完成后，数据库的数据还是应该处于正确的状态，即数据完整性没有被破坏，如银行转账，A转给B，必须保证A的一定转给B，一定不会出现A转了B没收到，否则数据库的数据处于不一致的状态；
+
+隔离性（Isolation）：并发事务执行之间互不影响，在一个事务内部的操作对其他事务是不产生影响，这需要事务隔离级别来指定隔离属性；
+
+持久性（Durablility）：事务一旦执行成功，它对数据库的数据的改变必须是永久的，不会因此如遇到系统故障或断电造成数据不一致或丢失。
+
+- 五大事务隔离级别
+
+  | 事务隔离级别                           | 说明                                                         |
+  | -------------------------------------- | ------------------------------------------------------------ |
+  | ISOLATION_DEFAULT                      | 默认，用底层数据库的默认隔离级别，数据库管理员设置什么就是什么 |
+  | ISOLATION_READ_UNCOMMITTED（未提交读） | 最低隔离级别，事务未提交前，就可被其他事务读取（会出现幻读、脏读、不可重复读） |
+  | ISOLATION_READ_COMMITTED（提交读）     | 一个事务提交后才能被其他事务读取到（该隔离级别禁止其他事务读取到未提交事务的数据，所以会造成幻读，不可重复读） |
+  | ISOLATION_REPEATABLE_READ（可重复读）  | 可重复读，保证多次读取同一个数据时，其值都和事务开始的时候的内容是一致，禁止读取到别的事务未提交的数据（该隔离基本可防止脏读、不可重复读，但会出现幻读），MySQL默认级别 |
+  | ISOLATION_SERIALIZABLE（序列化）       | 代价最高最可靠的隔离级别（该隔离能防止幻读、脏读、不可重复读） |
+
+- 七大传播行为（事务类型）
+
+  | 传播行为                  | 说明                                                         |
+  | ------------------------- | ------------------------------------------------------------ |
+  | PROPAGATION_REQUIRED      | 默认，支持当前事务，如果当前没有事务，则新建一个             |
+  | PROPAGATION_SUPPORTS      | 支持当前事务，如果当前没有事务，则以非事务性执行             |
+  | PROPAGATION_MANDATORY     | 支持当前事务，如果当前没有事务，则抛出异常                   |
+  | PROPAGATION_REQUIRES_NEW  | 始终新建一个事务，如当前原来有事务，则把原事务挂起           |
+  | PROPAGATION_NOT_SUPPORTED | 不支持当前事务，始终已非事务性方式执行，如当前事务存在，挂起该事务 |
+  | PROPAGATION_NEVER         | 不支持当前事务；如果当前事务存在，则引发异常                 |
+  | PROPAGATION_NESTED        | 如果当前事务存在，则在嵌套事务中执行，如果当前没有事务， 则按REQUIRED属性执行 |
+
+
+###### `Spring MVC流程`
+
+1. 用户发送请求至前端控制器`DispatchServlet`;
+2. 前端控制器`DispatchServlet`收到请求后会使用处理器映射器`HandlerMapping`来处理；
+3. 处理器映射器`HandlerMapping`根据请求`url`找到具体的处理器，生成处理器执行链`HanderExecutionChain`一并返回给`DispatchServlet`；
+4. `DispatcherServlet`接收到执行链之后，会调用`HandlerAdapter`去执行Handler；
+5. Handler适配器执行完成Handler（也就是我们写的Controller）之后会得到一个`ModelAndView`，并返回给`DispatcherServlet`；
+6. `DispatchServlet`将`ModelAndView`传给`ViewReslover`视图解析器；
+7. `ViewReslover`解析后返回具体View；
+8. `DispatchServlet`对View进行渲染视图；
+9. `DispatchServlet`响应用户。
+
+###### Spring框架中的设计模式
+
+代理模式—`AOP`
+
+单例模式——Spring配置文件中的定义的Bean默认为单例模式
+
+模板方法——用来解决代码重复的问题，譬如：`RestTempalte`、`JmsTempalte`、`JpaTempalte`
+
+工厂模式——`BeanFactory`用来创建对象实例
+
+适配器模式——`AOP`
+
+观察者模式——Spring 时间驱动模型
+
+###### Spring Bean的作用域
+
+- `singleton`：默认，使用该属性定义Bean时，IOC容器仅创建一个Bean实例，IOC容器每次返回的是同一个Bean实例；
+- `prototype`：使用该属性定义Bean时，IOC容器可以创建多个Bean实例，每次返回的都是一个新实例；
+- `request`：该属性仅对HTTP请求产生作用，使用该属性定义Bean时，每次HTTP请求都会创建一个新的Bean，适用于`WebApplicationContext`环境；
+- `session`：该属性仅用于HTTP Session，同一个Session共享一个Bean实例，不同的Session使用不同的实例；
+- `global-session`：该属性仅用于HTTP Session，同session作用域不同的是，所有的Session共享一个Bean实例
+
+
+###### `Bean`依赖注入方式
+
+构造器注入、setter方法注入、接口注入
+
+###### Spring如何处理线程并发问题？
+
+一般情况下，只有无状态的Bean才可以在多线程环境下共享，在Spring中，绝大部分Bean都可以声明为singleton作用域，就是因为Spring对一些Bean中非线程安全状态采用了`ThreadLocal`进行处理，让他们也成为线程安全的状态。
+
+`ThreadLocal`和线程同步机制都是为了解决多线程中相同变量的访问冲突问题。
+
+在同步机制中，通过对象的锁机制保证同一时间只有一个线程访问变量，这时该变量是多个线程共享的。使用同步机制要求程序慎密地分析什么时候对变量进行读写，什么时候需要锁定某个对象，什么时候释放对象锁等繁杂的问题，程序设计和编写难度相对较大。
+
+而`ThreadLocal`则从另一个角度解决多线程的并发问题。`ThreadLocal`会为每一个线程提供一个独立的变量副本，从而隔离了多个线程对数据的访问冲突。因为每一个线程都拥有自己的变量副本，从而也就没有必要对该变量进行同步了。`ThreadLocal`提供了线程安全的共享对象，在编写多线程代码时，可以把不安全的变量封装进`ThreadLocal`。
+
+由于`ThreadLocal`中可以持有任何类型的对象，低版本JDK所提供的get()返回的是Object对象，需要强制类型转换。但`JDK5.0`通过泛型很好的解决了这个问题，在一定程度地简化`ThreadLocal`的使用。
+
+概括起来说，对于多线程资源共享的问题，同步机制采用了“以时间换空间”的方式，而`ThreadLocal`采用了“以空间换时间”的方式。前者仅提供一份变量，让不同的线程排队访问，而后者为每一个线程都提供了一份变量，因此可以同时访问而互不影响。
+
+###### `Spring AOP`
+
+`AOP（Aspect Oriented Programming，面向切面编程）`，可以说是`OOP（Object Oriented Programming，面向对象编程）`的补充和完善。`OOP`引入封装、继承、多态等概念来建立一种对象层次结构，用于模拟公共行为的一个集合。不过`OOP`允许开发者定义纵向的关系，但并不适合定义横向的关系，例如日志功能。日志代码往往横向地散布在所有对象层次中，而与它对应的对象的核心功能毫无关系，对于其他类型的代码，如安全性、异常处理和透明的持续性也都是如此，这种散布在各处的无关代码被称为横切（`Cross Cutting`），在`OOP`设计中，它导致了大量代码的重复，而不利于各个模块的重用。
+
+`AOP`技术恰恰相反，它利用一种称为“横切”的技术，破解开封装的对象内部，并将那些影响了多个类的公共行为封装到一个可重用的模块，并将其命名为“`Aspect`”，即切面。所谓切面，简单说就是那些与业务无关，却为业务模块所共同调用的逻辑或责任封装起来，便于减少系统的重复代码，降低模块之间的耦合度，并有利于未来的可操作性和可维护性。
+
+使用横切技术，`AOP`把软件系统分为两个部分：核心关注点和横切关注点。业务处理的主要流程是核心关注点，与之关系不大的部分是横切关注点。横切关注点的一个特点是，他们经常发生在核心关注点的多处，而各处基本相似，比如权限认证、日志、事务。`AOP`的作用在于分离系统中的各种关注点，将核心关注点和横切关注点分离开来。
+
